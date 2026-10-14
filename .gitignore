@@ -1,0 +1,7 @@
+.ruff_cache
+
+*.sif
+result
+
+*.out
+*.err
