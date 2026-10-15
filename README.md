@@ -78,3 +78,11 @@ To achieve high-speed interconnect performance without breaking the container’
 * **Issue:** `singularity-tools.buildImage` constructs images inside a QEMU virtual machine whose default 2 GB disk fills up rapidly when copying compiler and MPI dependencies.
 
 * **Fix:** Allocate sufficient resources in `container.nix` (e.g., `diskSize = 10240;` MB) and wrap startup scripts with `pkgs.writeScript` to ensure derivation store paths resolve cleanly.
+
+## Architectural Trade-Offs & Host Interop Realities
+
+Bridging a hermetic container with a host's MPI stack presents a fundamental tension: **application reproducibility vs. hardware performance**. Injecting host drivers (`libmpi.so`, `libucx`) dynamically breaks container isolation, leaving the runtime vulnerable to driver ABI drifts, missing system plugins, and non-standard cluster configurations.
+
+Furthermore, low-level process management (PMIx) and hardware transports rely on host shared memory (`/dev/shm`), hardware devices (`/dev/infiniband`), and system sockets. Bypassing container namespace isolation is often mandatory to prevent lock failures, which introduces cluster-specific debugging overhead whenever target hardware or MPI build flags change.
+
+Selective host-library binding is a pragmatic compromise—delivering near-native HPC performance without rebuilding application stacks—but it remains an active trade-off rather than a zero-configuration, universal solution.
