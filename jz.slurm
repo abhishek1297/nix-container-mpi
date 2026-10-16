@@ -16,7 +16,7 @@ module load singularity openmpi/4.1.8
 NIX_CONTAINER="$SINGULARITY_ALLOWED_DIR/nix-openmpi-python.sif"
 
 # Site-specific mounts for Jean-Zay (Pass as argument to resolver)
-JZ_BASE_MOUNTS="$PWD,/gpfslocalsup,/gpfslocalsys,/lib64/slurm,/var/run,/etc/libibverbs.d,/etc/libnl"
+JZ_BASE_MOUNTS="$PWD,/gpfslocalsup,/gpfslocalsys"
 
 # Dynamically resolve dependencies
 source ./resolve_host_mpi_deps.sh "$JZ_BASE_MOUNTS"
